@@ -2,7 +2,7 @@ apiVersion: fungi.rs/v1alpha1
 kind: Service
 
 metadata:
-  name: ssh
+  name: ssh-tunnel
 
 spec:
   entries:

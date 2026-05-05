@@ -29,26 +29,26 @@
       "stability": "experimental"
     },
     {
-      "id": "ssh",
-      "name": "SSH",
+      "id": "ssh-tunnel",
+      "name": "SSH Tunnel",
       "description": "Expose an existing local SSH daemon on a target device as a Fungi TCP tunnel service.",
       "runtime": "tcp",
-      "manifestPath": "recipes/ssh/manifest.yaml",
-      "manifestAsset": "ssh.manifest.yaml",
-      "readmeAsset": "ssh.README.md",
+      "manifestPath": "recipes/ssh-tunnel/manifest.yaml",
+      "manifestAsset": "ssh-tunnel.manifest.yaml",
+      "readmeAsset": "ssh-tunnel.README.md",
       "homepage": "https://www.openssh.com/",
       "tags": ["ssh", "tcp", "tunnel"],
       "stability": "experimental"
     },
     {
-      "id": "webdav-wasip2",
-      "name": "WebDAV WASI Preview",
+      "id": "webdav",
+      "name": "WebDAV",
       "description": "A WebDAV server served as a Wasmtime-compatible WASI component.",
       "runtime": "wasmtime",
-      "manifestPath": "recipes/webdav-wasip2/manifest.yaml",
-      "manifestAsset": "webdav-wasip2.manifest.yaml",
-      "readmeAsset": "webdav-wasip2.README.md",
-      "homepage": "https://github.com/enbop/webdav-wasip2",
+      "manifestPath": "recipes/webdav/manifest.yaml",
+      "manifestAsset": "webdav.manifest.yaml",
+      "readmeAsset": "webdav.README.md",
+      "homepage": "https://github.com/enbop/webdav-wasi",
       "tags": ["files", "webdav", "tcp", "wasi", "wasmtime"],
       "stability": "experimental"
     }
