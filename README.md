@@ -12,8 +12,8 @@ manifest format evolves.
 Tagged releases publish static assets that can be fetched over HTTP:
 
 - `index.json`: recipe metadata and manifest paths.
-- `manifests.tar.gz`: packaged recipe manifests and per-recipe notes.
-- `manifests.zip`: the same packaged content in zip form.
+- `<recipe-id>.manifest.yaml`: a directly fetchable service manifest.
+- `<recipe-id>.README.md`: per-recipe notes.
 - `SHA256SUMS`: checksums for the published assets.
 
 The source layout intentionally mirrors the release layout:

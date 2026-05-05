@@ -3,7 +3,6 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
-PAYLOAD_DIR="$DIST_DIR/fungi-service-recipes"
 VERSION="${GITHUB_REF_NAME:-local}"
 
 cd "$ROOT_DIR"
@@ -14,7 +13,7 @@ if ! command -v jq >/dev/null 2>&1; then
 fi
 
 rm -rf "$DIST_DIR"
-mkdir -p "$PAYLOAD_DIR"
+mkdir -p "$DIST_DIR"
 
 jq -e . index.json >/dev/null
 
@@ -24,7 +23,7 @@ if [[ "$recipe_count" -eq 0 ]]; then
   exit 1
 fi
 
-while IFS=$'\t' read -r id manifest_path; do
+while IFS=$'\t' read -r id manifest_path manifest_asset readme_asset; do
   if [[ ! "$id" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
     echo "invalid recipe id: $id" >&2
     exit 1
@@ -41,8 +40,20 @@ while IFS=$'\t' read -r id manifest_path; do
     exit 1
   fi
 
+  expected_manifest_asset="$id.manifest.yaml"
+  if [[ "$manifest_asset" != "$expected_manifest_asset" ]]; then
+    echo "manifestAsset for $id must be $expected_manifest_asset" >&2
+    exit 1
+  fi
+
   if [[ ! -f "recipes/$id/README.md" ]]; then
     echo "missing README for $id: recipes/$id/README.md" >&2
+    exit 1
+  fi
+
+  expected_readme_asset="$id.README.md"
+  if [[ "$readme_asset" != "$expected_readme_asset" ]]; then
+    echo "readmeAsset for $id must be $expected_readme_asset" >&2
     exit 1
   fi
 
@@ -55,23 +66,16 @@ while IFS=$'\t' read -r id manifest_path; do
     echo "manifest for $id is missing kind: ServiceManifest" >&2
     exit 1
   fi
-done < <(jq -r '.recipes[] | [.id, .manifestPath] | @tsv' index.json)
 
-cp README.md LICENSE index.json "$PAYLOAD_DIR/"
-cp -R recipes "$PAYLOAD_DIR/"
+  cp "$manifest_path" "$DIST_DIR/$manifest_asset"
+  cp "recipes/$id/README.md" "$DIST_DIR/$readme_asset"
+done < <(jq -r '.recipes[] | [.id, .manifestPath, .manifestAsset, .readmeAsset] | @tsv' index.json)
 
 cp index.json "$DIST_DIR/index.json"
 
-tar -C "$DIST_DIR" -czf "$DIST_DIR/manifests.tar.gz" fungi-service-recipes
-
 (
   cd "$DIST_DIR"
-  zip -qr manifests.zip fungi-service-recipes
-)
-
-(
-  cd "$DIST_DIR"
-  sha256sum index.json manifests.tar.gz manifests.zip > SHA256SUMS
+  sha256sum index.json *.manifest.yaml *.README.md > SHA256SUMS
 )
 
 cat > "$DIST_DIR/RELEASE_NOTES.md" <<EOF
@@ -80,8 +84,8 @@ Fungi Service Recipes ${VERSION}
 Static assets:
 
 - index.json
-- manifests.tar.gz
-- manifests.zip
+- <recipe-id>.manifest.yaml
+- <recipe-id>.README.md
 - SHA256SUMS
 
 This is an experimental recipe collection, not a curated service hub or security-reviewed registry.

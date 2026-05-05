@@ -10,6 +10,8 @@
       "description": "A browser-based file manager served through the Docker-compatible runtime.",
       "runtime": "docker",
       "manifestPath": "recipes/filebrowser/manifest.yaml",
+      "manifestAsset": "filebrowser.manifest.yaml",
+      "readmeAsset": "filebrowser.README.md",
       "homepage": "https://github.com/filebrowser/filebrowser",
       "tags": ["files", "web", "docker"],
       "stability": "experimental"
@@ -20,6 +22,8 @@
       "description": "A lightweight File Browser build served as a Wasmtime-compatible WASI component.",
       "runtime": "wasmtime",
       "manifestPath": "recipes/filebrowser-lite-wasi/manifest.yaml",
+      "manifestAsset": "filebrowser-lite-wasi.manifest.yaml",
+      "readmeAsset": "filebrowser-lite-wasi.README.md",
       "homepage": "https://github.com/enbop/filebrowser-lite",
       "tags": ["files", "web", "wasi", "wasmtime"],
       "stability": "experimental"

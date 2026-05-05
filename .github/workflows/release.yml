@@ -27,8 +27,8 @@ jobs:
           name: fungi-service-recipes-static
           path: |
             dist/index.json
-            dist/manifests.tar.gz
-            dist/manifests.zip
+            dist/*.manifest.yaml
+            dist/*.README.md
             dist/SHA256SUMS
             dist/RELEASE_NOTES.md
 
@@ -39,6 +39,6 @@ jobs:
           body_path: dist/RELEASE_NOTES.md
           files: |
             dist/index.json
-            dist/manifests.tar.gz
-            dist/manifests.zip
+            dist/*.manifest.yaml
+            dist/*.README.md
             dist/SHA256SUMS
