@@ -29,8 +29,8 @@ index.json
 ## Current Recipes
 
 - `code-server`: code-server through the Docker-compatible runtime.
-- `filebrowser-lite-wasi`: File Browser Lite through the Wasmtime runtime.
-- `home-ssh`: an existing SSH daemon exposed as a TCP tunnel service.
+- `filebrowser-lite`: File Browser Lite through the Wasmtime runtime.
+- `ssh`: an existing SSH daemon exposed as a TCP tunnel service.
 - `webdav-wasip2`: WebDAV through the Wasmtime runtime.
 
 ## Local Build
