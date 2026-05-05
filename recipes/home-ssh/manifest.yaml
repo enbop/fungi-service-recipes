@@ -1,0 +1,15 @@
+apiVersion: fungi.rs/v1alpha1
+kind: Service
+
+metadata:
+  name: home-ssh
+
+spec:
+  entries:
+    ssh:
+      target: 127.0.0.1:22
+      usage: ssh
+
+notes:
+  - "Expose an existing SSH daemon on the target device as a Fungi service."
+  - "Fungi does not start SSH; the target device must already be listening on 127.0.0.1:22."

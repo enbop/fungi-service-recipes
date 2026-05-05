@@ -62,8 +62,8 @@ while IFS=$'\t' read -r id manifest_path manifest_asset readme_asset; do
     exit 1
   fi
 
-  if ! grep -q '^kind: ServiceManifest$' "$manifest_path"; then
-    echo "manifest for $id is missing kind: ServiceManifest" >&2
+  if ! grep -q '^kind: Service$' "$manifest_path"; then
+    echo "manifest for $id is missing kind: Service" >&2
     exit 1
   fi
 
