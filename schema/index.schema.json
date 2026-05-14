@@ -19,8 +19,7 @@
           "description": { "type": "string" },
           "runtime": { "type": "string" },
           "manifestPath": { "type": "string" },
-          "manifestAsset": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*\\.manifest\\.yaml$" },
-          "readmeAsset": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*\\.README\\.md$" },
+          "manifestAsset": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*\\.fungi\\.md$" },
           "homepage": { "type": "string" },
           "tags": {
             "type": "array",
