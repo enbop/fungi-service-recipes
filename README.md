@@ -12,8 +12,7 @@ manifest format evolves.
 Tagged releases publish static assets that can be fetched over HTTP:
 
 - `index.json`: recipe metadata and manifest paths.
-- `<recipe-id>.manifest.yaml`: a directly fetchable service manifest.
-- `<recipe-id>.README.md`: per-recipe notes.
+- `<recipe-id>.fungi.md`: a directly fetchable service file with YAML front matter and Markdown notes.
 - `SHA256SUMS`: checksums for the published assets.
 
 The source layout intentionally mirrors the release layout:
@@ -21,8 +20,7 @@ The source layout intentionally mirrors the release layout:
 ```text
 recipes/
   <recipe-id>/
-    manifest.yaml
-    README.md
+    <recipe-id>.fungi.md
 index.json
 ```
 
@@ -30,8 +28,8 @@ index.json
 
 - `code-server`: code-server through the Docker-compatible runtime.
 - `filebrowser-lite`: File Browser Lite through the Wasmtime runtime.
-- `ssh`: an existing SSH daemon exposed as a TCP tunnel service.
-- `webdav-wasip2`: WebDAV through the Wasmtime runtime.
+- `ssh-tunnel`: an existing SSH daemon exposed as a TCP tunnel service.
+- `webdav`: WebDAV through the Wasmtime runtime.
 
 ## Local Build
 
@@ -45,8 +43,8 @@ The generated files are written to `dist/`.
 
 ## Adding A Recipe
 
-1. Add `recipes/<recipe-id>/manifest.yaml`.
-2. Add a short `recipes/<recipe-id>/README.md`.
+1. Add `recipes/<recipe-id>/<recipe-id>.fungi.md`.
+2. Put the structured service definition in YAML front matter and the human/AI notes in the Markdown body.
 3. Add the recipe entry to `index.json`.
 4. Run `scripts/build-release.sh`.
 

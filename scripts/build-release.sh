@@ -23,7 +23,7 @@ if [[ "$recipe_count" -eq 0 ]]; then
   exit 1
 fi
 
-while IFS=$'\t' read -r id manifest_path manifest_asset readme_asset; do
+while IFS=$'\t' read -r id manifest_path manifest_asset; do
   if [[ ! "$id" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
     echo "invalid recipe id: $id" >&2
     exit 1
@@ -34,48 +34,36 @@ while IFS=$'\t' read -r id manifest_path manifest_asset readme_asset; do
     exit 1
   fi
 
-  expected_path="recipes/$id/manifest.yaml"
+  expected_path="recipes/$id/$id.fungi.md"
   if [[ "$manifest_path" != "$expected_path" ]]; then
     echo "manifestPath for $id must be $expected_path" >&2
     exit 1
   fi
 
-  expected_manifest_asset="$id.manifest.yaml"
+  expected_manifest_asset="$id.fungi.md"
   if [[ "$manifest_asset" != "$expected_manifest_asset" ]]; then
     echo "manifestAsset for $id must be $expected_manifest_asset" >&2
     exit 1
   fi
 
-  if [[ ! -f "recipes/$id/README.md" ]]; then
-    echo "missing README for $id: recipes/$id/README.md" >&2
+  if ! grep -q '^fungi: service/v1$' "$manifest_path"; then
+    echo "service file for $id is missing fungi: service/v1" >&2
     exit 1
   fi
 
-  expected_readme_asset="$id.README.md"
-  if [[ "$readme_asset" != "$expected_readme_asset" ]]; then
-    echo "readmeAsset for $id must be $expected_readme_asset" >&2
-    exit 1
-  fi
-
-  if ! grep -q '^apiVersion: fungi.rs/' "$manifest_path"; then
-    echo "manifest for $id is missing a Fungi apiVersion" >&2
-    exit 1
-  fi
-
-  if ! grep -q '^kind: Service$' "$manifest_path"; then
-    echo "manifest for $id is missing kind: Service" >&2
+  if ! grep -q '^---$' "$manifest_path"; then
+    echo "service file for $id is missing YAML front matter delimiter" >&2
     exit 1
   fi
 
   cp "$manifest_path" "$DIST_DIR/$manifest_asset"
-  cp "recipes/$id/README.md" "$DIST_DIR/$readme_asset"
-done < <(jq -r '.recipes[] | [.id, .manifestPath, .manifestAsset, .readmeAsset] | @tsv' index.json)
+done < <(jq -r '.recipes[] | [.id, .manifestPath, .manifestAsset] | @tsv' index.json)
 
 cp index.json "$DIST_DIR/index.json"
 
 (
   cd "$DIST_DIR"
-  sha256sum index.json *.manifest.yaml *.README.md > SHA256SUMS
+  sha256sum index.json *.fungi.md > SHA256SUMS
 )
 
 cat > "$DIST_DIR/RELEASE_NOTES.md" <<EOF
@@ -84,8 +72,7 @@ Fungi Service Recipes ${VERSION}
 Static assets:
 
 - index.json
-- <recipe-id>.manifest.yaml
-- <recipe-id>.README.md
+- <recipe-id>.fungi.md
 - SHA256SUMS
 
 This is an experimental recipe collection, not a curated service hub or security-reviewed registry.
