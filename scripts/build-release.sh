@@ -51,6 +51,16 @@ while IFS=$'\t' read -r id manifest_path manifest_asset; do
     exit 1
   fi
 
+  if ! grep -q "^id: $id$" "$manifest_path"; then
+    echo "service file for $id must declare id: $id" >&2
+    exit 1
+  fi
+
+  if grep -q '^name:' "$manifest_path"; then
+    echo "service file for $id must use id, not name" >&2
+    exit 1
+  fi
+
   if ! grep -q '^---$' "$manifest_path"; then
     echo "service file for $id is missing YAML front matter delimiter" >&2
     exit 1

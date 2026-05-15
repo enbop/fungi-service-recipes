@@ -1,6 +1,6 @@
 ---
 fungi: service/v1
-name: ssh-tunnel
+id: ssh-tunnel
 
 publish:
   ssh:
