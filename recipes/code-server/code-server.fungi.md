@@ -1,6 +1,6 @@
 ---
 fungi: service/v1
-name: code-server
+id: code-server
 
 run:
   provider: docker

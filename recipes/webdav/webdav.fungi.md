@@ -1,6 +1,6 @@
 ---
 fungi: service/v1
-name: webdav
+id: webdav
 
 run:
   provider: wasmtime

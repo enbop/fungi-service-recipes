@@ -1,6 +1,6 @@
 ---
 fungi: service/v1
-name: filebrowser-lite
+id: filebrowser-lite
 
 run:
   provider: wasmtime
