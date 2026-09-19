@@ -4,9 +4,11 @@ id: webdav
 
 run:
   provider: wasmtime
-  mode: http
   source:
-    url: https://github.com/enbop/webdav-wasi/releases/download/v0.1.1/webdav-wasi.wasm
+    url: https://github.com/enbop/webdav-wasi/releases/download/v0.2.0/webdav-wasi.wasm
+  args:
+    - --addr
+    - 127.0.0.1:8080
   env:
     WEBDAV_FS_ROOT: data
   mounts:
@@ -26,7 +28,8 @@ publish:
 Runs [webdav-wasi](https://github.com/enbop/webdav-wasi) through Fungi's
 Wasmtime runtime path.
 
-The recipe serves `$fungi.workspace` as a WebDAV endpoint.
+One long-running WASIp2 command owns the Tokio HTTP listener and serves
+`$fungi.workspace` as a WebDAV endpoint.
 
 ## Usage
 
@@ -36,4 +39,4 @@ useful health check for this experimental component.
 ## Source
 
 - Project: <https://github.com/enbop/webdav-wasi>
-- Artifact URL: <https://github.com/enbop/webdav-wasi/releases/download/v0.1.1/webdav-wasi.wasm>
+- Artifact URL: <https://github.com/enbop/webdav-wasi/releases/download/v0.2.0/webdav-wasi.wasm>
