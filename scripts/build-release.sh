@@ -16,6 +16,10 @@ rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 
 jq -e . index.json >/dev/null
+if ! jq -e 'all(.recipes[]; .runtime == "wasmtime" or .runtime == "tcp")' index.json >/dev/null; then
+  echo "recipes must use the wasmtime or tcp runtime" >&2
+  exit 1
+fi
 
 recipe_count="$(jq '.recipes | length' index.json)"
 if [[ "$recipe_count" -eq 0 ]]; then
