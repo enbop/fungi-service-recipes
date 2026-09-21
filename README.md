@@ -21,25 +21,39 @@ The source layout intentionally mirrors the release layout:
 recipes/
   <recipe-id>/
     <recipe-id>.fungi.md
-images/
-  <image-id>/
-    Dockerfile
 index.json
 ```
 
 ## Current Recipes
 
-- `code-server`: code-server through the Docker-compatible runtime.
 - `filebrowser-lite`: File Browser Lite through the Wasmtime runtime.
 - `socks5-wasip2`: an unauthenticated SOCKS5 TCP proxy through the Wasmtime runtime.
 - `ssh-tunnel`: an existing SSH daemon exposed as a TCP tunnel service.
-- `ubuntu-desktop-web`: an Ubuntu XFCE desktop through LinuxServer Webtop.
-- `ubuntu-dev-ssh`: an Ubuntu 24.04 development environment with SSH.
 - `webdav`: WebDAV through the Wasmtime runtime.
 
-The `ubuntu-dev-ssh` recipe uses the image source under
-`images/ubuntu-dev-ssh`. Pull requests build the image for both amd64 and
-arm64. Changes merged to `main` publish the versioned image to GHCR.
+Recipes support managed WASI applications and existing host TCP services.
+
+> Starting with Fungi 0.8.0, Docker container management is no longer supported.
+
+Start a container or host
+application yourself, publish its port on the target device's loopback interface,
+and connect it through a TCP service such as:
+
+```yaml
+fungi: service/v1
+id: host-web
+publish:
+  web:
+    tcp:
+      host: 127.0.0.1
+      port: 8080
+    client:
+      kind: web
+      path: /
+```
+
+Applying, stopping or removing this service controls Fungi access; it does not
+start, stop or delete the host process.
 
 ## Wasmtime Service Upgrades
 
