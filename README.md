@@ -32,7 +32,10 @@ index.json
 - `webdav`: WebDAV through the Wasmtime runtime.
 
 Recipes support managed WASI applications and existing host TCP services.
-Fungi no longer creates or manages Docker containers. Start a container or host
+
+> Starting with Fungi 0.8.0, Docker container management is no longer supported.
+
+Start a container or host
 application yourself, publish its port on the target device's loopback interface,
 and connect it through a TCP service such as:
 
