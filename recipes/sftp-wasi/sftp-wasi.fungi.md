@@ -8,17 +8,19 @@ run:
     url: https://github.com/enbop/sftp-wasi/releases/download/v0.1.0/sftp-wasi.wasm
   env:
     SFTP_BIND_HOST: 127.0.0.1
-    SFTP_PORT: "2222"
-    SFTP_FS_ROOT: appdata/files
+    SFTP_PORT: "19222"
+    SFTP_FS_ROOT: data
     SFTP_HOST_KEY: appdata/host_ed25519
   mounts:
+    - from: $fungi.workspace
+      to: data
     - from: $fungi.service.data
       to: appdata
 
 publish:
   sftp:
     tcp:
-      port: 2222
+      port: 19222
     client:
       kind: ssh
 ---
@@ -52,7 +54,7 @@ sshfs -p PORT demo@HOST:/ /path/to/empty-mountpoint
 ```
 
 The experimental default username and password are both `demo`. The listener
-binds to `127.0.0.1:2222` on the service device. For multiple instances, copy
+binds to `127.0.0.1:19222` on the service device. For multiple instances, copy
 the recipe and change both `SFTP_PORT` and `publish.sftp.tcp.port` to a free
 port per instance.
 
@@ -60,19 +62,39 @@ port per instance.
 there is no remote shell, SSH exec, legacy `scp -O`, or `scp -R` support.
 WASIp2 reports fixed file modes; chmod/chown are accepted as no-ops.
 
-## Data and Access
+## Data and Host Key
 
-Files persist in `$fungi.service.data/files`. On first start, the server creates
-an Ed25519 host key at `$fungi.service.data/host_ed25519`, outside the SFTP file
-root, and reuses it across service and daemon restarts. This recipe does not
-expose `$fungi.workspace` or require a host-path allowlist change. Back up files
-before removing the service.
+The SFTP root exposes `$fungi.workspace` with read/write access, matching the
+WebDAV and File Browser Lite recipes. On the default stable installation this
+is `~/Fungi/workspace`. These services share the same files on the device when
+configured with this mount.
+
+The separate `$fungi.service.data` mount holds the Ed25519 host key at
+`$fungi.service.data/host_ed25519`. The key is generated on first start and
+reused across service and daemon restarts. It remains outside the SFTP file
+root.
+
+## Updating An Existing Instance
+
+After a catalog containing this change is published, explicitly reapply the
+recipe under the existing instance name using the commands above. Refreshing
+the catalog alone does not change installed services. The update preserves
+the local service ID and host key while switching the visible file root to
+`$fungi.workspace`.
+
+Files from the earlier recipe remain in `$fungi.service.data/files`; they are
+not automatically moved into the workspace. Back them up or copy selected
+files into the workspace, checking for name conflicts, if they should remain
+accessible over SFTP.
+
+## Access
 
 This is an experimental password-authenticated server with public demo
-credentials, intended for trusted local/Fungi access. Do not expose its port
-directly to untrusted networks. To change credentials, use a private local copy
-of the recipe with `SFTP_USERNAME` and `SFTP_PASSWORD` under `run.env`; do not
-commit real credentials to the catalog.
+credentials, intended for trusted local/Fungi access. Authenticated clients can
+read, overwrite, and delete files throughout the shared workspace. Do not expose
+its port directly to untrusted networks. To change credentials, use a private
+local copy of the recipe with `SFTP_USERNAME` and `SFTP_PASSWORD` under
+`run.env`; do not commit real credentials to the catalog.
 
 ## Source
 
